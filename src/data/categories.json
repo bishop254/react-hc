@@ -1,0 +1,13 @@
+[
+  { "name": "Forging & Machining", "value": 1 },
+  { "name": "Casting & Machining", "value": 2 },
+  { "name": "Pressing & Fabrication", "value": 3 },
+  { "name": "Proprietary Mechanical", "value": 4 },
+  { "name": "Proprietary Electrical", "value": 5 },
+  { "name": "Plastics, Rubber, Painting and Stickers", "value": 6 },
+  { "name": "EV/3W/2W", "value": 7 },
+  { "name": "BW", "value": 8 },
+  { "name": "Accessories", "value": 9 },
+  { "name": "IDM (Indirect Material)", "value": 10 },
+  { "name": "Import", "value": 11 }
+]

@@ -145,7 +145,7 @@ const CalibrationLineChart = () => {
   };
 
   return (
-    <Card className="w-full h-full shadow-1 flex flex-column justify-content-between p-3">
+    <Card className="w-full  shadow-1 flex flex-column justify-content-between p-3 chartCard">
       <div>
         <div className="mb-2 text-sm text-color-secondary">{item.title}</div>
         <div className="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-1">

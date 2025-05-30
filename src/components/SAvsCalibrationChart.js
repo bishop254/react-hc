@@ -2,13 +2,13 @@ import { useState, useRef } from "react";
 import { Card } from "primereact/card";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
-import supplierAssessmentData from "../../data/supplierAssignment_Audit_Actions.json";
+import supplierAssessmentData from "../data/supplierAssignment_Audit_Actions.json";
 import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-const MSIScoreLineChart = () => {
+const SAvsCalibrationChart = () => {
   const [selectedData, setSelectedData] = useState(supplierAssessmentData);
   const [clickedMonth, setClickedMonth] = useState(null);
   const [filteredAudits, setFilteredAudits] = useState([]);
@@ -25,11 +25,8 @@ const MSIScoreLineChart = () => {
         month: "short",
         year: "2-digit",
       });
-
       counts[monthKey] = {
         value: 0,
-        score: 0,
-        avg: 0,
         label: label,
       };
     }
@@ -44,11 +41,6 @@ const MSIScoreLineChart = () => {
 
         if (keyYear === year) {
           counts[key]["value"] += 1;
-          counts[key]["score"] +=
-            item.auditorAssignmentSubmission.auditorMSIScore;
-          counts[key]["avg"] = +(
-            counts[key]["score"] / counts[key]["value"]
-          ).toFixed(2);
         }
       }
     });
@@ -71,7 +63,7 @@ const MSIScoreLineChart = () => {
     let prev = null;
 
     for (let i = trendArray.length - 1; i >= 0; i--) {
-      const val = trendArray[i]?.avg;
+      const val = trendArray[i]?.value;
       if (last === null && val !== null && val !== undefined) {
         last = val;
       } else if (prev === null && val !== null && val !== undefined) {
@@ -97,17 +89,18 @@ const MSIScoreLineChart = () => {
   let lineSeries = Object.keys(monthsGrouping).map((item) => {
     return {
       name: monthsGrouping[item]["label"],
-      y: monthsGrouping[item]["avg"],
+      y: monthsGrouping[item]["value"],
     };
   });
 
   const item = {
-    title: "Average MSI score of calibrated suppliers",
+    title: "Average Number of Calibrations conducted per month",
     value: `${
       (completedAudits.length / selectedData.length).toFixed(1) * 100
     }%`,
     trend: trend,
     trendPositive: trend > 0,
+    data: [1, 2, 3, 4, 3, 2, 1],
   };
 
   const chartOptions = {
@@ -176,7 +169,7 @@ const MSIScoreLineChart = () => {
       </div>
 
       <Dialog
-        header={`MSI Score for ${clickedMonth}`}
+        header={`Audits for ${clickedMonth}`}
         visible={showDialog}
         style={{ width: "80vw" }}
         onHide={() => setShowDialog(false)}
@@ -199,8 +192,17 @@ const MSIScoreLineChart = () => {
             icon="pi pi-download"
             onClick={() =>
               dt.current.exportCSV({
+                exportFilename: "Audit_Report",
                 selectionOnly: false,
-                exportFilename: "MSI_Score_Report_" + clickedMonth,
+                exportHeader: true,
+                fields: [
+                  "vendor.supplierName",
+                  "vendor.supplierSPOC",
+                  "vendor.supplierLocation",
+                  "vendor.supplierContact",
+                  "auditorAssignmentSubmission.auditorMSIScore",
+                  "modified_on",
+                ],
               })
             }
             className="p-button-primary"
@@ -280,4 +282,4 @@ const MSIScoreLineChart = () => {
   );
 };
 
-export default MSIScoreLineChart;
+export default SAvsCalibrationChart;

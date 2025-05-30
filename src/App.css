@@ -4,7 +4,6 @@
   border-radius: 1rem;
 }
 
-
 .p-datatable {
   font-family: "Inter", Roboto, sans-serif;
   font-size: 12px;
@@ -19,4 +18,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chartCard {
+  min-height: 3rem;
+}
+
+.p-inputtext-sm {
+  font-size: 0.65rem;
 }
