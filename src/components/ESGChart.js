@@ -11,8 +11,9 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import supplierAssessmentData from "../data/supplierAssignment_Audit_Actions.json";
 import categoryData from "../data/categories.json";
+import performanceData from "../data/performance_data.json";
 
-const SAvsCalibrationChart = () => {
+const ESGChart = () => {
   const [chartType, setChartType] = useState("column");
   const [viewMode, setViewMode] = useState("chart");
   const [filteredData, setFilteredData] = useState(supplierAssessmentData);
@@ -47,6 +48,13 @@ const SAvsCalibrationChart = () => {
 
   useEffect(() => {
     let temp = [...supplierAssessmentData];
+    temp = temp.map((item) => {
+      return {
+        ...item,
+        esg: getPerfomanceData(item.vendorCode) ?? {},
+      };
+    });
+
     if (selectedCategory.length)
       temp = temp.filter((d) =>
         selectedCategory.includes(d.vendor?.supplierCategory)
@@ -76,13 +84,34 @@ const SAvsCalibrationChart = () => {
     chartType,
   ]);
 
-  const totalSAScore = filteredData.reduce((sum, d) => {
-    return sum + (d.supplierAssignmentSubmission?.supplierMSIScore || 0);
-  }, 0);
+  const getPerfomanceData = (vendorCode) => {
+    const result = performanceData.find(
+      (item) => item.vendor_code == vendorCode
+    );
+    return result || { environment: 0, social: 0, governance: 0 };
+  };
 
-  const totalCalibrationScore = filteredData.reduce((sum, d) => {
-    return sum + (d.auditorAssignmentSubmission?.auditorMSIScore || 0);
-  }, 0);
+  const totalEnvironmentalScore = +filteredData
+    .reduce((sum, d) => {
+      return sum + +getPerfomanceData(d.vendorCode)["environment"] || 0;
+    }, 0)
+    .toFixed(2);
+
+  const totalSocialScore = +filteredData
+    .reduce((sum, d) => {
+      return sum + +getPerfomanceData(d.vendorCode)["social"] || 0;
+    }, 0)
+    .toFixed(2);
+
+  const totalGovernanceScore = +filteredData
+    .reduce((sum, d) => {
+      return sum + +getPerfomanceData(d.vendorCode)["governance"] || 0;
+    }, 0)
+    .toFixed(2);
+
+  console.log(totalEnvironmentalScore);
+  console.log(totalSocialScore);
+  console.log(totalGovernanceScore);
 
   const chartOptions =
     chartType === "pie"
@@ -95,28 +124,36 @@ const SAvsCalibrationChart = () => {
               name: "Scores",
               data: [
                 {
-                  name: "Self Assessment Score",
-                  y: totalSAScore,
+                  name: "Environmental Score",
+                  y: totalEnvironmentalScore,
                   events: {
                     click: () => {
-                      const data = filteredData.filter(
-                        (d) => d.supplierAssignmentSubmission?.supplierMSIScore
-                      );
-                      setModalTitle("Self Assessment Score");
+                      const data = filteredData.filter((d) => d?.vendorCode);
+                      setModalTitle("Environmental Score");
                       setModalData(data);
                       setModalVisible(true);
                     },
                   },
                 },
                 {
-                  name: "Calibration Score",
-                  y: totalCalibrationScore,
+                  name: "Social Score",
+                  y: totalSocialScore,
                   events: {
                     click: () => {
-                      const data = filteredData.filter(
-                        (d) => d.auditorAssignmentSubmission?.auditorMSIScore
-                      );
-                      setModalTitle("Calibration Score");
+                      const data = filteredData.filter((d) => d?.vendorCode);
+                      setModalTitle("Social Score");
+                      setModalData(data);
+                      setModalVisible(true);
+                    },
+                  },
+                },
+                {
+                  name: "Governance Score",
+                  y: totalGovernanceScore,
+                  events: {
+                    click: () => {
+                      const data = filteredData.filter((d) => d?.vendorCode);
+                      setModalTitle("Governance Score");
                       setModalData(data);
                       setModalVisible(true);
                     },
@@ -143,19 +180,17 @@ const SAvsCalibrationChart = () => {
       : {
           chart: { type: chartType, animation: true },
           title: { text: null },
-          xAxis: { categories: ["Scores"] },
+          xAxis: { categories: ["ESG Scores"] },
           yAxis: { min: 0, title: { text: "Score" } },
           series: [
             {
-              name: "Self Assessment Score",
-              data: [totalSAScore],
+              name: "Environmental Score",
+              data: [totalEnvironmentalScore],
               point: {
                 events: {
                   click: () => {
-                    const data = filteredData.filter(
-                      (d) => d.supplierAssignmentSubmission?.supplierMSIScore
-                    );
-                    setModalTitle("Self Assessment Score");
+                    const data = filteredData.filter((d) => d?.vendorCode);
+                    setModalTitle("Environmental Score");
                     setModalData(data);
                     setModalVisible(true);
                   },
@@ -163,15 +198,27 @@ const SAvsCalibrationChart = () => {
               },
             },
             {
-              name: "Calibration Score",
-              data: [totalCalibrationScore],
+              name: "Social Score",
+              data: [totalSocialScore],
               point: {
                 events: {
                   click: () => {
-                    const data = filteredData.filter(
-                      (d) => d.auditorAssignmentSubmission?.auditorMSIScore
-                    );
-                    setModalTitle("Calibration Score");
+                    const data = filteredData.filter((d) => d?.vendorCode);
+                    setModalTitle("Social Score");
+                    setModalData(data);
+                    setModalVisible(true);
+                  },
+                },
+              },
+            },
+            {
+              name: "Governance Score",
+              data: [totalGovernanceScore],
+              point: {
+                events: {
+                  click: () => {
+                    const data = filteredData.filter((d) => d?.vendorCode);
+                    setModalTitle("Governance Score");
                     setModalData(data);
                     setModalVisible(true);
                   },
@@ -199,14 +246,19 @@ const SAvsCalibrationChart = () => {
       body: (row) => getCategoryName(row.vendor?.supplierCategory),
     },
     {
-      field: "supplierAssignmentSubmission.supplierMSIScore",
-      header: "Self Assessment Score",
-      body: (row) => row.supplierAssignmentSubmission?.supplierMSIScore ?? "-",
+      field: "esg.environment",
+      header: "Environment Score",
+      body: (row) => row.esg?.environment ?? "-",
     },
     {
-      field: "auditorAssignmentSubmission.auditorMSIScore",
-      header: "Calibration Score",
-      body: (row) => row.auditorAssignmentSubmission?.auditorMSIScore ?? "-",
+      field: "esg.social",
+      header: "Social Score",
+      body: (row) => row.esg?.social ?? "-",
+    },
+    {
+      field: "esg.governance",
+      header: "Governance Score",
+      body: (row) => row.esg?.governance ?? "-",
     },
     {
       field: "modified_on",
@@ -371,4 +423,4 @@ const SAvsCalibrationChart = () => {
   );
 };
 
-export default SAvsCalibrationChart;
+export default ESGChart;

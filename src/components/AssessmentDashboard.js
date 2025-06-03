@@ -66,9 +66,9 @@ const AssessmentDashboard = ({
   const chartOptions = useMemo(
     () => ({
       chart: { type: chartType, backgroundColor: "#FFF" },
-      title: { text: undefined, disabled: true },
+      title: { text: null, disabld: true },
       xAxis: { type: "category" },
-      yAxis: { title: { text: "Score" } },
+      yAxis: { title: { text: "Count" } },
       plotOptions: {
         series: {
           borderWidth: 0,
@@ -103,7 +103,7 @@ const AssessmentDashboard = ({
           colorByPoint: true,
           data: statuses.map((s) => ({
             name: s.label,
-            y: buckets[s.label]?.length ? buckets[s.label][0].score : 0,
+            y: (buckets[s.label] || []).length,
           })),
         },
       ],
@@ -136,27 +136,24 @@ const AssessmentDashboard = ({
     setFilteredData(tmp);
 
     const b = statuses.reduce((acc, s) => ({ ...acc, [s.label]: [] }), {});
-
     tmp.forEach((item) => {
-      if (Array.isArray(item.supplierAssignmentSubmission)) {
-        item.supplierAssignmentSubmission.forEach((entry) => {
-          if (entry.supplierMSIScore != null) {
-            const label = statuses.find((s) => s.type === 1)?.label;
-            if (label) b[label].push({ ...item, score: entry.supplierMSIScore });
-          }
+      const field = item[submissionField];
+      if (Array.isArray(field)) {
+        field.forEach((action) => {
+          statuses.forEach((s) => {
+            if (
+              action.categoryOfFinding === s.type &&
+              (s.subtype == null || action.nonComplianceType === s.subtype)
+            ) {
+              b[s.label].push(item);
+            }
+          });
         });
-      }
-
-      if (Array.isArray(item.auditorAssignmentSubmission)) {
-        item.auditorAssignmentSubmission.forEach((entry) => {
-          if (entry.auditorMSIScore != null) {
-            const label = statuses.find((s) => s.type === 0)?.label;
-            if (label) b[label].push({ ...item, score: entry.auditorMSIScore });
-          }
-        });
+      } else if (field?.type != null) {
+        const match = statuses.find((s) => s.type === field.type);
+        if (match) b[match.label].push(item);
       }
     });
-
     setBuckets(b);
   }, [
     data,
@@ -169,7 +166,7 @@ const AssessmentDashboard = ({
     selectedDates,
   ]);
 
-   const clearFilters = () => {
+  const clearFilters = () => {
     setSelectedCategory([]);
     setSelectedLocation([]);
     setSelectedSupplier([]);
@@ -318,7 +315,7 @@ const AssessmentDashboard = ({
           <em>{sourceText}</em>
           <br />
           <em>
-            Filtered by:
+            Filtered by:{" "}
             {[
               selectedCategory.length &&
                 `Category: ${selectedCategory.join(", ")}`,

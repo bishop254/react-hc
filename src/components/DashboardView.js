@@ -3,6 +3,8 @@ import supplierAssessmentData from "../data/supplierAssignment_Audit_Actions.jso
 import categoryData from "../data/categories.json";
 import AssessmentDashboard from "./AssessmentDashboard";
 import { Card } from "primereact/card";
+import SAvsCalibrationChart from "./SAvsCalibrationChart";
+import ESGChart from "./ESGChart";
 
 const getCategoryName = (value) => {
   const cat = categoryData.find((c) => c.value === value);
@@ -239,42 +241,33 @@ const DashboardOverview = () => {
                 >
                   ●
                 </span>
-                Suppliers Self Assessment vs Calibration
+                Self Assessment Score vs Calibration Score
               </div>
             }
             className="h-full"
             style={{ borderTop: `4px solid brown` }}
           >
-            <AssessmentDashboard
-              data={supplierAssessmentData}
-              categoryOptions={categoryData}
-              title="Suppliers Self Assessment vs Calibration"
-              dateField="auditStartDate"
-              submissionField="auditorAssignmentSubmission"
-              statuses={[
-                { label: "Self Assessment Score", type: 1 },
-                { label: "Calibration Score", type: 0 },
-              ]}
-              tableColumns={[
-                { field: "vendor.supplierName", header: "Supplier" },
-                { field: "vendor.supplierLocation", header: "Location" },
-                {
-                  field: "vendor.supplierCategory",
-                  header: "Category",
-                  body: (row) => getCategoryName(row.vendor.supplierCategory),
-                },
-                {
-                  field: "assessmentStartDate",
-                  header: "Assessment Start Date",
-                  body: (row) =>
-                    row.assessmentStartDate
-                      ? new Date(row.assessmentStartDate).toDateString()
-                      : "-",
-                },
-              ]}
-              caption="Self Assessment summary"
-              sourceText="Data source: Internal ESG Reports"
-            />
+            <SAvsCalibrationChart />
+          </Card>
+        </div>
+
+        <div className="col-12 md:col-6 lg:col-6">
+          <Card
+            title={
+              <div className="flex align-items-center gap-2">
+                <span
+                  className="text-sm"
+                  style={{ color: "purple", fontWeight: "bold" }}
+                >
+                  ●
+                </span>
+                ESG Score
+              </div>
+            }
+            className="h-full"
+            style={{ borderTop: `4px solid purple` }}
+          >
+            <ESGChart />
           </Card>
         </div>
       </div>
