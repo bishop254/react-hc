@@ -6,6 +6,7 @@ import { Card } from "primereact/card";
 import SAvsCalibrationChart from "./SAvsCalibrationChart";
 import ESGChart from "./ESGChart";
 import FrameworkRadarChart from "./FrameworkRadarChart";
+import MSIRatingChart from "./MSIRatingChart";
 
 const getCategoryName = (value) => {
   const cat = categoryData.find((c) => c.value === value);
@@ -229,6 +230,26 @@ const DashboardOverview = () => {
               caption="Self Assessment summary"
               sourceText="Data source: Internal ESG Reports"
             />
+          </Card>
+        </div>
+
+        <div className="col-12 md:col-6 lg:col-6">
+          <Card
+            title={
+              <div className="flex align-items-center gap-2">
+                <span
+                  className="text-sm"
+                  style={{ color: "indigo", fontWeight: "bold" }}
+                >
+                  ●
+                </span>
+                Suppliers MSI Rating Drilldown
+              </div>
+            }
+            className="h-full"
+            style={{ borderTop: `4px solid indigo` }}
+          >
+            <MSIRatingChart />
           </Card>
         </div>
 

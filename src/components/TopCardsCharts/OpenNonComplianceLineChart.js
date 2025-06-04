@@ -173,7 +173,7 @@ const OpenNonComplianceLineChart = () => {
       </div>
 
       <Dialog
-        header={`MSI Score for ${clickedMonth}`}
+        header={`Open Regulatory Non-compliances for ${clickedMonth}`}
         visible={showDialog}
         style={{ width: "80vw" }}
         onHide={() => setShowDialog(false)}

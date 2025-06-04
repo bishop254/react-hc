@@ -181,7 +181,7 @@ const SupplierSpendLineChart = () => {
       </div>
 
       <Dialog
-        header={`MSI Score for ${clickedMonth}`}
+        header={`TVSM supplier spend for ${clickedMonth}`}
         visible={showDialog}
         style={{ width: "80vw" }}
         onHide={() => setShowDialog(false)}
