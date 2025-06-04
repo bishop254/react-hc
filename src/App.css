@@ -27,3 +27,12 @@
 .p-inputtext-sm {
   font-size: 0.65rem;
 }
+
+.p-multiselect .p-multiselect-label {
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-height: 100px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}

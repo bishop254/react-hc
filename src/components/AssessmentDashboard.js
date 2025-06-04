@@ -85,6 +85,8 @@ const AssessmentDashboard = ({
                   )
                   .filter(Boolean);
 
+                console.log(filtered);
+
                 setModalTitle(this.name);
                 setModalData(filtered);
                 setIsModalVisible(true);
@@ -133,7 +135,6 @@ const AssessmentDashboard = ({
         return dt >= new Date(start) && dt <= new Date(end);
       });
     }
-    setFilteredData(tmp);
 
     const b = statuses.reduce((acc, s) => ({ ...acc, [s.label]: [] }), {});
     tmp.forEach((item) => {
@@ -154,6 +155,9 @@ const AssessmentDashboard = ({
         if (match) b[match.label].push(item);
       }
     });
+
+    setFilteredData(tmp);
+
     setBuckets(b);
   }, [
     data,
@@ -342,7 +346,7 @@ const AssessmentDashboard = ({
         modal
         onHide={() => setIsModalVisible(false)}
       >
-        <div className="flex flex-wrap align-items-center gap-2 mb-3">
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
           <span className="p-input-icon-left">
             <i className="pi pi-search" />
             <input
@@ -350,7 +354,7 @@ const AssessmentDashboard = ({
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               placeholder="Global Search"
-              className="p-inputtext p-component"
+              className="p-inputtext p-component p-inputtext-sm"
             />
           </span>
 
@@ -358,7 +362,7 @@ const AssessmentDashboard = ({
             label="Export to CSV"
             icon="pi pi-download"
             onClick={() => dt.current.exportCSV()}
-            className="p-button-success"
+            className="p-button-primary p-inputtext-sm"
           />
         </div>
 
@@ -366,7 +370,7 @@ const AssessmentDashboard = ({
           value={modalData}
           paginator
           rows={10}
-          responsiveLayout="scroll"
+          ref={dt}
           globalFilter={globalFilter}
         >
           {tableColumns.map((col) => (

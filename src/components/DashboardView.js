@@ -59,6 +59,8 @@ const DashboardOverview = () => {
               tableColumns={[
                 { field: "vendor.supplierName", header: "Supplier" },
                 { field: "vendor.supplierLocation", header: "Location" },
+                { field: "vendor.supplierSPOC", header: "SPOC" },
+                { field: "vendor.supplierContact", header: "Contact" },
                 {
                   field: "vendor.supplierCategory",
                   header: "Category",
@@ -108,6 +110,8 @@ const DashboardOverview = () => {
               tableColumns={[
                 { field: "vendor.supplierName", header: "Supplier" },
                 { field: "vendor.supplierLocation", header: "Location" },
+                { field: "vendor.supplierSPOC", header: "SPOC" },
+                { field: "vendor.supplierContact", header: "Contact" },
                 {
                   field: "vendor.supplierCategory",
                   header: "Category",
@@ -163,6 +167,8 @@ const DashboardOverview = () => {
               tableColumns={[
                 { field: "vendor.supplierName", header: "Supplier" },
                 { field: "vendor.supplierLocation", header: "Location" },
+                { field: "vendor.supplierSPOC", header: "SPOC" },
+                { field: "vendor.supplierContact", header: "Contact" },
                 {
                   field: "vendor.supplierCategory",
                   header: "Category",
