@@ -593,6 +593,26 @@ const FrameworkRadarChart = () => {
         modal
         onHide={() => setModalVisible(false)}
       >
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+          <span className="p-input-icon-left">
+            <i className="pi pi-search" />
+            <input
+              type="search"
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              placeholder="Global Search"
+              className="p-inputtext p-component p-inputtext-sm"
+            />
+          </span>
+
+          <Button
+            label="Export to CSV"
+            icon="pi pi-download"
+            onClick={() => dt.current.exportCSV()}
+            className="p-button-primary p-inputtext-sm"
+          />
+        </div>
+
         <DataTable
           value={modalData}
           paginator
