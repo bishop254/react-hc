@@ -5,6 +5,7 @@ import AssessmentDashboard from "./AssessmentDashboard";
 import { Card } from "primereact/card";
 import SAvsCalibrationChart from "./SAvsCalibrationChart";
 import ESGChart from "./ESGChart";
+import FrameworkRadarChart from "./FrameworkRadarChart";
 
 const getCategoryName = (value) => {
   const cat = categoryData.find((c) => c.value === value);
@@ -268,6 +269,26 @@ const DashboardOverview = () => {
             style={{ borderTop: `4px solid purple` }}
           >
             <ESGChart />
+          </Card>
+        </div>
+
+        <div className="col-12 md:col-6 lg:col-6">
+          <Card
+            title={
+              <div className="flex align-items-center gap-2">
+                <span
+                  className="text-sm"
+                  style={{ color: "orange", fontWeight: "bold" }}
+                >
+                  ●
+                </span>
+                Aggregated ESG Score
+              </div>
+            }
+            className="h-full"
+            style={{ borderTop: `4px solid orange` }}
+          >
+            <FrameworkRadarChart />
           </Card>
         </div>
       </div>
